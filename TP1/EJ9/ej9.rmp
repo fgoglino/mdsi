@@ -29,7 +29,7 @@
         <parameter key="datamanagement" value="double_array"/>
         <parameter key="data_management" value="auto"/>
       </operator>
-      <operator activated="true" class="multiply" compatibility="9.6.000" expanded="true" height="145" name="Multiply" width="90" x="179" y="34"/>
+      <operator activated="true" class="multiply" compatibility="9.6.000" expanded="true" height="124" name="Multiply" width="90" x="179" y="34"/>
       <operator activated="true" class="concurrency:correlation_matrix" compatibility="9.6.000" expanded="true" height="103" name="Correlation Matrix" width="90" x="447" y="340">
         <parameter key="attribute_filter_type" value="subset"/>
         <parameter key="attribute" value=""/>
@@ -129,25 +129,19 @@
         <parameter key="add_default_mapping" value="false"/>
       </operator>
       <connect from_op="Read Excel" from_port="output" to_op="Multiply" to_port="input"/>
-      <connect from_op="Multiply" from_port="output 1" to_port="result 1"/>
-      <connect from_op="Multiply" from_port="output 2" to_op="Discretize" to_port="example set input"/>
-      <connect from_op="Multiply" from_port="output 3" to_op="Discretize (2)" to_port="example set input"/>
-      <connect from_op="Multiply" from_port="output 4" to_op="Correlation Matrix" to_port="example set"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="Discretize" to_port="example set input"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="Discretize (2)" to_port="example set input"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="Correlation Matrix" to_port="example set"/>
       <connect from_op="Correlation Matrix" from_port="matrix" to_port="result 3"/>
       <connect from_op="Discretize (2)" from_port="example set output" to_op="Map (2)" to_port="example set input"/>
-      <connect from_op="Discretize (2)" from_port="original" to_port="result 6"/>
       <connect from_op="Map (2)" from_port="example set output" to_port="result 2"/>
       <connect from_op="Discretize" from_port="example set output" to_op="Map" to_port="example set input"/>
-      <connect from_op="Discretize" from_port="original" to_port="result 5"/>
-      <connect from_op="Map" from_port="example set output" to_port="result 4"/>
+      <connect from_op="Map" from_port="example set output" to_port="result 1"/>
       <portSpacing port="source_input 1" spacing="0"/>
       <portSpacing port="sink_result 1" spacing="0"/>
       <portSpacing port="sink_result 2" spacing="0"/>
       <portSpacing port="sink_result 3" spacing="0"/>
       <portSpacing port="sink_result 4" spacing="0"/>
-      <portSpacing port="sink_result 5" spacing="0"/>
-      <portSpacing port="sink_result 6" spacing="0"/>
-      <portSpacing port="sink_result 7" spacing="0"/>
     </process>
   </operator>
 </process>
