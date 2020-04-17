@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.6.000">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.6.000" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="read_excel" compatibility="9.6.000" expanded="true" height="68" name="READ TRAIN" width="90" x="45" y="34">
+        <parameter key="excel_file" value="R:\Downloads\p2datos\diabetes_nominal_train.xlsx"/>
+        <parameter key="sheet_selection" value="sheet number"/>
+        <parameter key="sheet_number" value="1"/>
+        <parameter key="imported_cell_range" value="A1:I10485776"/>
+        <parameter key="encoding" value="SYSTEM"/>
+        <parameter key="first_row_as_names" value="true"/>
+        <list key="annotations"/>
+        <parameter key="date_format" value=""/>
+        <parameter key="time_zone" value="SYSTEM"/>
+        <parameter key="locale" value="English (United States)"/>
+        <parameter key="read_all_values_as_polynominal" value="false"/>
+        <list key="data_set_meta_data_information">
+          <parameter key="0" value="Pregnancies.true.polynominal.attribute"/>
+          <parameter key="1" value="Glucose.true.polynominal.attribute"/>
+          <parameter key="2" value="BloodPressure.true.polynominal.attribute"/>
+          <parameter key="3" value="SkinThickness.true.polynominal.attribute"/>
+          <parameter key="4" value="Insulin.true.polynominal.attribute"/>
+          <parameter key="5" value="BMI.true.polynominal.attribute"/>
+          <parameter key="6" value="DiabetesPedigreeFunction.true.polynominal.attribute"/>
+          <parameter key="7" value="Age.true.polynominal.attribute"/>
+          <parameter key="8" value="Outcome.true.polynominal.label"/>
+        </list>
+        <parameter key="read_not_matching_values_as_missings" value="false"/>
+        <parameter key="datamanagement" value="double_array"/>
+        <parameter key="data_management" value="auto"/>
+      </operator>
+      <operator activated="true" class="read_excel" compatibility="9.6.000" expanded="true" height="68" name="READ TEST" width="90" x="45" y="442">
+        <parameter key="excel_file" value="R:\Downloads\p2datos\diabetes_nominal_test.xlsx"/>
+        <parameter key="sheet_selection" value="sheet number"/>
+        <parameter key="sheet_number" value="1"/>
+        <parameter key="imported_cell_range" value="A1:I10485776"/>
+        <parameter key="encoding" value="SYSTEM"/>
+        <parameter key="first_row_as_names" value="true"/>
+        <list key="annotations"/>
+        <parameter key="date_format" value=""/>
+        <parameter key="time_zone" value="SYSTEM"/>
+        <parameter key="locale" value="English (United States)"/>
+        <parameter key="read_all_values_as_polynominal" value="false"/>
+        <list key="data_set_meta_data_information">
+          <parameter key="0" value="Pregnancies.true.polynominal.attribute"/>
+          <parameter key="1" value="Glucose.true.polynominal.attribute"/>
+          <parameter key="2" value="BloodPressure.true.polynominal.attribute"/>
+          <parameter key="3" value="SkinThickness.true.polynominal.attribute"/>
+          <parameter key="4" value="Insulin.true.polynominal.attribute"/>
+          <parameter key="5" value="BMI.true.polynominal.attribute"/>
+          <parameter key="6" value="DiabetesPedigreeFunction.true.polynominal.attribute"/>
+          <parameter key="7" value="Age.true.polynominal.attribute"/>
+          <parameter key="8" value="Outcome.true.polynominal.label"/>
+        </list>
+        <parameter key="read_not_matching_values_as_missings" value="false"/>
+        <parameter key="datamanagement" value="double_array"/>
+        <parameter key="data_management" value="auto"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="9.6.000" expanded="true" height="103" name="MULTIPLY TRAIN" width="90" x="179" y="34"/>
+      <operator activated="true" class="id3" compatibility="9.6.000" expanded="true" height="82" name="MAKE TREE" width="90" x="313" y="34">
+        <parameter key="criterion" value="information_gain"/>
+        <parameter key="minimal_size_for_split" value="40"/>
+        <parameter key="minimal_leaf_size" value="20"/>
+        <parameter key="minimal_gain" value="0.01"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="9.6.000" expanded="true" height="124" name="MULTIPLY TREE" width="90" x="447" y="34"/>
+      <operator activated="true" class="apply_model" compatibility="9.6.000" expanded="true" height="82" name="APPLY TO TRAIN" width="90" x="313" y="238">
+        <list key="application_parameters"/>
+        <parameter key="create_view" value="false"/>
+      </operator>
+      <operator activated="true" class="performance" compatibility="9.6.000" expanded="true" height="82" name="PERF TRAIN" width="90" x="581" y="238">
+        <parameter key="use_example_weights" value="true"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="9.6.000" expanded="true" height="82" name="APPLY TO TEST" width="90" x="447" y="442">
+        <list key="application_parameters"/>
+        <parameter key="create_view" value="false"/>
+      </operator>
+      <operator activated="true" class="performance" compatibility="9.6.000" expanded="true" height="82" name="PERF TEST" width="90" x="715" y="442">
+        <parameter key="use_example_weights" value="true"/>
+      </operator>
+      <connect from_op="READ TRAIN" from_port="output" to_op="MULTIPLY TRAIN" to_port="input"/>
+      <connect from_op="READ TEST" from_port="output" to_op="APPLY TO TEST" to_port="unlabelled data"/>
+      <connect from_op="MULTIPLY TRAIN" from_port="output 1" to_op="MAKE TREE" to_port="training set"/>
+      <connect from_op="MULTIPLY TRAIN" from_port="output 2" to_op="APPLY TO TRAIN" to_port="unlabelled data"/>
+      <connect from_op="MAKE TREE" from_port="model" to_op="MULTIPLY TREE" to_port="input"/>
+      <connect from_op="MULTIPLY TREE" from_port="output 1" to_op="APPLY TO TEST" to_port="model"/>
+      <connect from_op="MULTIPLY TREE" from_port="output 2" to_op="APPLY TO TRAIN" to_port="model"/>
+      <connect from_op="MULTIPLY TREE" from_port="output 3" to_port="result 3"/>
+      <connect from_op="APPLY TO TRAIN" from_port="labelled data" to_op="PERF TRAIN" to_port="labelled data"/>
+      <connect from_op="PERF TRAIN" from_port="performance" to_port="result 1"/>
+      <connect from_op="APPLY TO TEST" from_port="labelled data" to_op="PERF TEST" to_port="labelled data"/>
+      <connect from_op="PERF TEST" from_port="performance" to_port="result 2"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+    </process>
+  </operator>
+</process>
